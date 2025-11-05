@@ -13,17 +13,8 @@ public class ChatController {
 
     private final ChatClient chatClient;
 
-    public ChatController(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder
-                .defaultSystem("""
-                        You are an internal HR assistant. Your role is to\s
-                        help employees with their questions related to their\s
-                        HR Policies, such as leave policies, benefits and code\s
-                        of conduct. If a user asks for help with anything outside\s
-                        of these topics, kindly inform them you can only assist\s
-                        with queries related to HR policies.
-                        """)
-                .build();
+    public ChatController(@Autowired ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     @GetMapping("/chat")
