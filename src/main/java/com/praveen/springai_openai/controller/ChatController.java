@@ -13,14 +13,15 @@ public class ChatController {
 
     private final ChatClient chatClient;
 
-    public ChatController(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    public ChatController(@Autowired ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     @GetMapping("/chat")
     public String chat(@RequestParam("message") String message) {
         return chatClient
-                .prompt(message)
+                .prompt()
+                .user(message)
                 .call()
                 .content();
     }
