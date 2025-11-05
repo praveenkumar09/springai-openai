@@ -14,14 +14,8 @@ public class ChatController {
     private final ChatClient chatClient;
 
     public ChatController(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
-    }
-
-    @GetMapping("/chat")
-    public String chat(@RequestParam("message") String message) {
-        return chatClient
-                .prompt()
-                .system("""
+        this.chatClient = chatClientBuilder
+                .defaultSystem("""
                         You are an internal HR assistant. Your role is to\s
                         help employees with their questions related to their\s
                         HR Policies, such as leave policies, benefits and code\s
@@ -29,6 +23,13 @@ public class ChatController {
                         of these topics, kindly inform them you can only assist\s
                         with queries related to HR policies.
                         """)
+                .build();
+    }
+
+    @GetMapping("/chat")
+    public String chat(@RequestParam("message") String message) {
+        return chatClient
+                .prompt()
                 .user(message)
                 .call()
                 .content();
