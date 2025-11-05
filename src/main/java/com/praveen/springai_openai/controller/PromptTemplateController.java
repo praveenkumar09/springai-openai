@@ -42,4 +42,16 @@ public class PromptTemplateController {
                 .content();
     }
 
+    @GetMapping("/prompt-stuffing")
+    public String promptStuffing(
+            @RequestParam("message") String message
+    ){
+        return chatClient
+                .prompt()
+                .system(systemPromptTemplate)
+                .user(message)
+                .call()
+                .content();
+    }
+
 }
