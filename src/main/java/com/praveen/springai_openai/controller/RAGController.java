@@ -24,16 +24,22 @@ public class RAGController {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
+    private final ChatClient webSearchRAGChatClient;
 
     @Value("classpath:/promptTemplates/systemPromptRandomDataTemplate.st")
     Resource systemPromptTemplate;
 
+    @Value("classpath:/promptTemplates/systemPromptTemplate.st")
+    Resource hrSystemPromptTemplate;
+
     public RAGController(
             @Qualifier("chatMemoryChatClient") ChatClient chatClient,
-            VectorStore vectorStore
+            VectorStore vectorStore,
+            @Qualifier("webSearchRAGChatClient") ChatClient webSearchRAGChatClient
     ) {
         this.chatClient = chatClient;
         this.vectorStore = vectorStore;
+        this.webSearchRAGChatClient = webSearchRAGChatClient;
     }
 
     @RequestMapping("/random/chat")
@@ -57,6 +63,36 @@ public class RAGController {
                 .system(promptSystemSpec ->
                         promptSystemSpec.text(systemPromptTemplate)
                                 .param("documents",similarContext))
+                .advisors(advisorSpec ->
+                        advisorSpec.param(CONVERSATION_ID,username))
+                .user(message)
+                .call()
+                .content();
+        return ResponseEntity.ok(answer);
+    }
+
+    @RequestMapping("/hr/chat")
+    public ResponseEntity<String> hrChat(
+            @RequestHeader("username") String username,
+            @RequestParam("message") String message
+    ){
+        String answer =  chatClient
+                .prompt()
+                .advisors(advisorSpec ->
+                        advisorSpec.param(CONVERSATION_ID,username))
+                .user(message)
+                .call()
+                .content();
+        return ResponseEntity.ok(answer);
+    }
+
+    @RequestMapping("/web-search/chat")
+    public ResponseEntity<String> webChat(
+            @RequestHeader("username") String username,
+            @RequestParam("message") String message
+    ){
+        String answer =  webSearchRAGChatClient
+                .prompt()
                 .advisors(advisorSpec ->
                         advisorSpec.param(CONVERSATION_ID,username))
                 .user(message)
