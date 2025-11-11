@@ -29,7 +29,7 @@ public class HRPolicyLoader {
         TikaDocumentReader documentReader = new TikaDocumentReader(policyFile);
         List<Document> documents = documentReader.get();
         TextSplitter textSplitter = TokenTextSplitter.builder()
-                .withChunkSize(100)
+                .withChunkSize(200)
                 .withMaxNumChunks(400)
                 .build();
         vectorStore.add(textSplitter.split(documents));
