@@ -49,8 +49,8 @@ public class HelpDeskTools {
     ) {
         String username = (String) toolContext.getContext().get("username");
         logger.info("Getting all tickets for user {}",username);
-        throw new RuntimeException("Not yet implemented");
-        //return helpDeskTicketService.getAllTicketsByUsername(username);
+        //throw new RuntimeException("Not yet implemented");
+        return helpDeskTicketService.getAllTicketsByUsername(username);
     }
 
 }
