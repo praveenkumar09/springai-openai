@@ -41,7 +41,8 @@ public class HelpDeskTools {
 
     @Tool(
             name="getTickets",
-            description = "Get all tickets for a user based on a given username"
+            description = "Get all tickets for a user based on a given username",
+            returnDirect = true
     )
     public List<HelpDeskTicket> getAllTickets(
             ToolContext toolContext
